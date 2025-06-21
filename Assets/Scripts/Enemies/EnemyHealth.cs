@@ -11,11 +11,14 @@ public class EnemyHealth : MonoBehaviour
     private int currentHealth;
     private Knockback knockback;
     private Flash flash;
+    private AudioManager audioManager;
+
 
     private void Awake()
     {
         flash = GetComponent<Flash>();
         knockback = GetComponent<Knockback>();
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
     }
 
     private void Start()
@@ -25,6 +28,7 @@ public class EnemyHealth : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        audioManager.PlaySFX(audioManager.enemyHitClip);
         currentHealth -= damage;
         knockback.GetKnockedBack(PlayerController.Instance.transform, knockBackThrust);
         StartCoroutine(flash.FlashRoutine());

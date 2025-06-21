@@ -18,6 +18,8 @@ public class PlayerHealth : Singleton<PlayerHealth>
     private bool canTakeDamage = true;
     private Knockback knockback;
     private Flash flash;
+    private AudioManager audioManager;
+
 
     const string HEALTH_SLIDER_TEXT = "Health Slider";
     const string TOWN_TEXT = "Scene1";
@@ -29,6 +31,7 @@ public class PlayerHealth : Singleton<PlayerHealth>
 
         flash = GetComponent<Flash>();
         knockback = GetComponent<Knockback>();
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
     }
 
     private void Start()
@@ -62,6 +65,7 @@ public class PlayerHealth : Singleton<PlayerHealth>
     {
         if (!canTakeDamage) { return; }
 
+        audioManager.PlaySFX(audioManager.playerHitClip);
         ScreenShakeManager.Instance.ShakeScreen();
         knockback.GetKnockedBack(hitTransform, knockBackThrustAmount);
         StartCoroutine(flash.FlashRoutine());
@@ -77,6 +81,8 @@ public class PlayerHealth : Singleton<PlayerHealth>
         if (currentHealth <= 0 && !isDead)
         {
             isDead = true;
+            audioManager.StopBG();
+            audioManager.PlaySFX(audioManager.loseClip);
             Destroy(ActiveWeapon.Instance.gameObject);
             currentHealth = 0;
             //GetComponent<Animator>().SetTrigger(DEATH_HASH);

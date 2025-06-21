@@ -19,12 +19,15 @@ public class Pickup : MonoBehaviour
     [SerializeField] private float heightY = 1.5f;
     [SerializeField] private float popDuration = 1f;
 
+    private AudioManager audioManager;
+
     private Vector3 moveDir;
     private Rigidbody2D rb;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
     }
 
     private void Start()
@@ -58,6 +61,7 @@ public class Pickup : MonoBehaviour
         if (other.gameObject.GetComponent<PlayerController>())
         {
             DetectPickupType();
+            audioManager.PlaySFX(audioManager.coinClip);
             Destroy(gameObject);
         }
     }
